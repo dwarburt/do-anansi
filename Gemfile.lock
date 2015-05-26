@@ -12,6 +12,7 @@ GEM
     rack (1.6.1)
     rack-protection (1.5.3)
       rack
+    rake (10.4.2)
     ruby-progressbar (1.7.5)
     sinatra (1.4.6)
       rack (~> 1.4)
@@ -24,4 +25,5 @@ PLATFORMS
 
 DEPENDENCIES
   minitest-reporters
+  rake
   sinatra
