@@ -3,19 +3,19 @@ require_relative './test_helper'
 class AnansiTest < Minitest::Test
 
   # the class should be instantiated with the url that will be fetched
-  def test_anansi_knows_its_home
+  def test_it_knows_its_home
     home = 'http://github.com'
     anansi = Anansi.new(home)
     assert_equal URI.parse(home), anansi.url
   end
 
-  def test_anansi_only_does_valid_uris
+  def test_only_valid_uris
     assert_raises URI::InvalidURIError do
       Anansi.new('\/')
     end
   end
 
-  def test_anansi_only_does_http_or_https
+  def test_only_http_or_https
     assert_raises ArgumentError do
       Anansi.new('file://test')
     end
