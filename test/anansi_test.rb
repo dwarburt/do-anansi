@@ -6,7 +6,7 @@ class AnansiTest < Minitest::Test
   def test_anansi_knows_its_home
     home = 'http://github.com'
     anansi = Anansi.new(home)
-    assert_equal URI.parse(home), anansi.domain
+    assert_equal URI.parse(home), anansi.url
   end
 
   def test_anansi_only_does_valid_uris
@@ -19,8 +19,8 @@ class AnansiTest < Minitest::Test
     assert_raises ArgumentError do
       Anansi.new('file://test')
     end
-    assert Anansi.new 'http://test', 'the http scheme was not accepted'
-    assert Anansi.new 'https://test', 'the https scheme was not accepted'
+    assert Anansi.new('http://test'), 'the http scheme was not accepted'
+    assert Anansi.new('https://test'), 'the https scheme was not accepted'
   end
 
 
