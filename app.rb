@@ -1,5 +1,7 @@
 require 'sinatra'
+require 'json'
 require './lib/anansi'
+
 class App < Sinatra::Base
   get '/' do
     'Hello there...'
