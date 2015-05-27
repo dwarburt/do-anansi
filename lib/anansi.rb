@@ -21,6 +21,10 @@ class Anansi
       .map    {|a| a.attributes['href'].value }
       .select {|a| link_local a }
 
+    stylesheets = doc.css('link')
+      .select {|a| a.attributes['href'] && a.attributes['rel'] && a.attributes.['rel'] == 'stylesheet'}
+      .map {|a| a.attributes['href'].value}
+
     imgs = doc.css('img')
       .map {|i| i.attributes['src'].value}
 
@@ -31,7 +35,9 @@ class Anansi
     {
         scripts: scripts,
         imgs: imgs,
-        links: links
+        links: links,
+        stylesheets: stylesheets,
+        bytes: @getter.html.size
     }
   end
 
