@@ -23,5 +23,7 @@ class AnansiTest < Minitest::Test
     assert Anansi.new('https://test'), 'the https scheme was not accepted'
   end
 
+  
+
 
 end

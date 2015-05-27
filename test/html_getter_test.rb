@@ -12,4 +12,8 @@ class HtmlGetterTest < Minitest::Test
     assert_equal 'GET', o['method']
     assert_equal 'scooterlabs.com', o['headers']['Host']
   end
+  def test_mock_works
+    m = MockHtmlGetter.new
+    assert_match 'html',  m.html
+  end
 end
