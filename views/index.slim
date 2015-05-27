@@ -3,9 +3,15 @@ html
   head
     script src="http://d3js.org/d3.v3.min.js"
     script src="http://code.jquery.com/jquery-2.1.4.min.js"
-    script src="/index.js"
+    script src="/scripts/index.js"
+    script src="/scripts/force.js"
     link rel="stylesheet" href="/stylesheets/main.css"
+    link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
   body
     h1 Anansi
     #start-box
-      input hint="What url to start on?" type="text" name="start_url"
+      input placeholder="What url to start on? (include http://)" type="text" name="start_url" class="big-box"
+    #start-button
+      span class="fa-stack fa-lg"
+        i#starbutton class="fa fa-sun-o fa-stack-2x itsa-button"
+        i#playbutton class="fa fa-play-circle fa-stack-1x itsa-button"

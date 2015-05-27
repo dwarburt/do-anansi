@@ -39,6 +39,7 @@ class Anansi
         imgs: imgs,
         links: links,
         stylesheets: stylesheets,
+        url: @url.to_s,
         bytes: @getter.html.size
     }
   end
