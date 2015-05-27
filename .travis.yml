@@ -2,3 +2,10 @@ language: ruby
 cache: bundler
 rvm:
   - 2.2.2
+after_success:
+  - openssl aes-256-cbc -K $encrypted_12b522212d62_key -iv $encrypted_12b522212d62_iv -in deploy.pem.enc -out deploy.pem -d
+  - chmod 600 deploy.pem
+  - ssh-add deploy.pem
+  - git remote add deploy ssh://anansi@ruby-web-crawling-and-showing-links-thing.info:/home/anansi/do-anansi.git
+  - git push deploy master:master
+  
