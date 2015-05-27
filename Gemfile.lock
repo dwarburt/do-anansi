@@ -16,6 +16,8 @@ GEM
     rack (1.6.1)
     rack-protection (1.5.3)
       rack
+    rack-test (0.6.3)
+      rack (>= 1.0)
     rake (10.4.2)
     ruby-progressbar (1.7.5)
     sinatra (1.4.6)
@@ -31,5 +33,6 @@ DEPENDENCIES
   minitest-reporters
   nokogiri
   patron
+  rack-test
   rake
   sinatra
