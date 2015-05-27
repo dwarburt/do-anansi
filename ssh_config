@@ -1,4 +1,0 @@
-Host anansi
-	Hostname ruby-web-crawling-and-showing-links-thing.info
-	User anansi
-	IdentityFile ~/deploy.pem
