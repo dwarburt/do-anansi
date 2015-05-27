@@ -2,6 +2,7 @@ require_relative './test_helper'
 
 class AnansiTest < Minitest::Test
 
+  EX = 'http://example.com'
   # the class should be instantiated with the url that will be fetched
   def test_it_knows_its_home
     home = 'http://github.com'
@@ -23,7 +24,25 @@ class AnansiTest < Minitest::Test
     assert Anansi.new('https://test'), 'the https scheme was not accepted'
   end
 
-  
+  def test_html_is_parsed
+    a = Anansi.new('http://www.reddit.com/r/TuxedoCats/')
+    a.inject_getter MockHtmlGetter.new
+    assert a.page_data
+  end
+
+  def test_one_link_is_local
+    a = Anansi.new(EX)
+    a.inject_getter MockHtmlGetter.new(:one_local_link)
+    assert_equal 1, a.page_data[:links].count
+  end
+
+  def test_two_links
+    a = Anansi.new(EX)
+    a.inject_getter MockHtmlGetter.new(:two_links)
+    assert_equal 2, a.page_data[:links].count
+  end
+
+
 
 
 end

@@ -1,5 +1,5 @@
 require 'html_getter'
-
+require 'nokogiri'
 class Anansi
 
   attr_reader :url
@@ -14,4 +14,37 @@ class Anansi
     @getter = new_getter
   end
 
+  def page_data
+    doc = Nokogiri::HTML(@getter.html)
+    links = doc.css('a')
+      .select {|a| a.attributes['href']       }
+      .map    {|a| a.attributes['href'].value }
+      .select {|a| link_local a }
+
+    imgs = doc.css('img')
+      .map {|i| i.attributes['src'].value}
+
+    scripts = doc.css( 'script')
+      .select{|s| s.attributes['src']}
+      .map {|s| s.attributes['src'].value}
+
+    {
+        scripts: scripts,
+        imgs: imgs,
+        links: links
+    }
+  end
+
+  private
+  #this should return true if the link is for the same domain
+  def link_local(link)
+    begin
+      u = URI.parse link
+      host_match = u.host == @url.host
+      nil_host = u.host.nil?
+      return host_match || nil_host
+    rescue
+      false
+    end
+  end
 end
