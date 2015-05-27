@@ -20,7 +20,8 @@ class AppTest < Minitest::Test
   def test_it_will_fetch
     post '/fetch', { url: 'http://google.com' }
     assert last_response.ok?
-    assert_equal 'http://google.com', last_response.body
+    result = JSON.parse(last_response.body)
+    assert_equal 3, result.keys.count
   end
 
 end
