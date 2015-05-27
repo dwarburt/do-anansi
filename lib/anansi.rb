@@ -22,7 +22,7 @@ class Anansi
       .select {|a| link_local a }
 
     stylesheets = doc.css('link')
-      .select {|a| a.attributes['href'] && a.attributes['rel'] && a.attributes.['rel'] == 'stylesheet'}
+      .select {|a| a.attributes['href'] && a.attributes['rel'] && a.attributes['rel'] == 'stylesheet'}
       .map {|a| a.attributes['href'].value}
 
     imgs = doc.css('img')
