@@ -1,4 +1,4 @@
-require 'html_getter'
+require_relative './html_getter'
 require 'nokogiri'
 class Anansi
 
