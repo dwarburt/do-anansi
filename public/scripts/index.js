@@ -22,7 +22,7 @@ function letsGo() {
   $.post('/fetch', {url: page_url}, function(data) {
     stopSpin();
     hideButton();
-    fs = new forceChart(JSON.parse(data));
+    fs = new ForceChart(JSON.parse(data));
   });
 
 }
@@ -34,7 +34,6 @@ $(function() {
   $('.big-box').on('keyup', function() {
     var t = $(this).val();
     if (!t.match("^https?://")) {
-      console.log('nogood');
       $(this).addClass('bad');
     } else {
       $(this).removeClass('bad');

@@ -1,11 +1,12 @@
-function forceChart(start_data) {
+function ForceChart(start_data) {
 
   var self = this;
 
   self.width = 960;
   self.height = 500;
 
-  self.fill = d3.scale.category20();
+  self.node_data = {};
+  self.node_data[start_data.url] = start_data;
 
   self.force = d3.layout.force()
     .size([self.width, self.height])
@@ -19,9 +20,7 @@ function forceChart(start_data) {
 
   self.svg = d3.select("body").append("svg")
     .attr("width", self.width)
-    .attr("height", self.height)
-    .on("mousemove", mousemove)
-    .on("mousedown", mousedown);
+    .attr("height", self.height);
 
   self.svg.append("rect")
     .attr("width", self.width)
@@ -37,11 +36,7 @@ function forceChart(start_data) {
     .attr("transform", "translate(-100,-100)")
     .attr("class", "cursor");
 
-  restart();
-
-  function mousemove() {
-    self.cursor.attr("transform", "translate(" + d3.mouse(this) + ")");
-  }
+  self.restart();
 
   function mousedown() {
     var point = d3.mouse(this),
@@ -57,7 +52,7 @@ function forceChart(start_data) {
       }
     });
 
-    restart();
+    self.restart();
   }
 
   function tick() {
@@ -81,20 +76,45 @@ function forceChart(start_data) {
         return d.y;
       });
   }
+}
 
-  function restart() {
-    self.link = self.link.data(self.links);
+ForceChart.prototype.restart = function() {
+  var self = this;
+  self.link = self.link.data(self.links);
 
-    self.link.enter().insert("line", ".node")
-      .attr("class", "link");
+  self.link.enter().insert("line", ".node")
+    .attr("class", "link");
 
-    self.node = self.node.data(self.nodes);
+  self.node = self.node.data(self.nodes);
 
-    self.node.enter().insert("circle", ".cursor")
-      .attr("class", "node")
-      .attr("r", 5)
-      .call(self.force.drag);
+  self.node.enter().insert("circle", ".cursor")
+    .attr("class", "node")
+    .attr("r", function(d) {
+      //1 pixel for every KB
+      return d.bytes / 1024;
+    })
+    .on('mouseover', function(d) {
+      $('#current-url').text(d.url);
+    })
+    .on('mouseout', function(d) {
+      $('#current-url').text('');
+    })
+    .call(self.force.drag);
 
-    self.force.start();
+  self.force.start();
+};
+ForceChart.prototype.addNode = function(page_data, link_to) {
+  var self = this;
+  if (self.node_data.hasOwnProperty(page_data.url)) {
+    return;
   }
+  if (!self.node_data.hasOwnProperty(link_to)) {
+    return;
+  }
+  var link_target_node = self.node_data[link_to];
+  page_data.x = link_target_node.x;
+  page_data.y = link_target_node.y;
+  self.nodes.push(page_data);
+  self.links.push({source: page_data, target: link_target_node});
+
 }

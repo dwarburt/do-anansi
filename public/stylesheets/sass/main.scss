@@ -90,7 +90,7 @@ rect {
 }
 
 .node {
-  fill: #000;
+  fill: #154d58;
 }
 
 .cursor {
@@ -101,4 +101,11 @@ rect {
 
 .link {
   stroke: #999;
+}
+#current-url {
+  height: 50px;
+  line-height: 50px;
+  font-size: 30px;
+  color: blue;
+  text-decoration: underline;
 }
