@@ -13,6 +13,11 @@ class MockHtmlGetter
     @mode = mode
   end
 
+  def html=(a_string)
+    @html = a_string
+    @mode = :just_tell_me_what_html_you_want
+  end
+
   def html
     case @mode
       when :reddit
@@ -21,6 +26,8 @@ class MockHtmlGetter
         '<a href="x" /> <a href="x2" />'
       when :one_local_link
         '<a href="http://example.com/x" /> <a href="http://example.org/y" />'
+      when :just_tell_me_what_html_you_want
+        @html
       else
         ''
     end

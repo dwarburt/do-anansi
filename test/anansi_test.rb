@@ -42,6 +42,22 @@ class AnansiTest < Minitest::Test
     assert_equal 2, a.page_data[:links].count
   end
 
+  def test_asset_path
+    a = Anansi.new(EX)
+    mhg = MockHtmlGetter.new
+    mhg.html = '
+      <htm>
+        <img src="/rooted_asset.css">
+        <img src="unrooted_asset.css">
+        <img src="http://another_domain.com/rooted/longer/path/to/file.css">
+    '
+    a.inject_getter mhg
+    pg = a.page_data
+    assert_equal EX + '/rooted_asset.css', pg[:imgs][0]
+    assert_equal EX + '/unrooted_asset.css', pg[:imgs][1]
+    assert_equal 'http://another_domain.com/rooted/longer/path/to/file.css', pg[:imgs][2]
+  end
+
 
 
 

@@ -20,17 +20,19 @@ class Anansi
       .select {|a| a.attributes['href']       }
       .map    {|a| a.attributes['href'].value }
       .select {|a| link_local a }
+      .map    {|a| asset_path a }
 
     stylesheets = doc.css('link')
       .select {|a| a.attributes['href'] && a.attributes['rel'] && a.attributes['rel'] == 'stylesheet'}
-      .map {|a| a.attributes['href'].value}
+      .map    {|a| asset_path a.attributes['href'].value}
+
 
     imgs = doc.css('img')
-      .map {|i| i.attributes['src'].value}
+      .map {|i| asset_path i.attributes['src'].value}
 
     scripts = doc.css( 'script')
       .select{|s| s.attributes['src']}
-      .map {|s| s.attributes['src'].value}
+      .map   {|s| asset_path s.attributes['src'].value}
 
     {
         scripts: scripts,
@@ -52,5 +54,9 @@ class Anansi
     rescue
       false
     end
+  end
+
+  def asset_path(link)
+    URI.join(@url, link).to_s
   end
 end
