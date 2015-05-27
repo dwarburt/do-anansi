@@ -1,10 +1,11 @@
 require 'sinatra'
 require 'json'
+require 'slim'
 require './lib/anansi'
 
 class App < Sinatra::Base
   get '/' do
-    'Hello there...'
+    slim :index
   end
   post '/fetch' do
     anansi = Anansi.new params[:url]

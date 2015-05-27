@@ -14,7 +14,7 @@ class AppTest < Minitest::Test
   def test_it_says_something
     get '/'
     assert last_response.ok?, 'doesnt seem ok'
-    assert_equal 'Hello there...', last_response.body
+    assert_match '<html>', last_response.body
   end
 
   def dont_test_it_will_fetch
