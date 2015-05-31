@@ -1,21 +1,27 @@
-function ForceChart(start_data) {
-
+function ForceChart(start_data, opts) {
+  var defaultOpts = {
+    max_depth: 3,
+    width: 960,
+    height: 500
+  };
+  opts = typeof opts !== 'undefined' ? opts : {} ;
+  $.extend(opts, defaultOpts);
   var self = this;
 
-  self.max_depth = 3;
+  //set up options
+  self.max_depth = opts.max_depth;
+  self.width = opts.width;
+  self.height = opts.height;
+  
+  //Initialize state
   self.current_depth = 0;
-  self.node_queue = [];
-
-  self.status = 'play';
-
-  self.width = 960;
-  self.height = 500;
-  self.larget_page = 0;
+  self.node_queue    = [];
+  self.larget_page   = 0;
   self.smallest_page = 0;
+  self.status        = 'play';
+  self.node_data     = {};
 
-  self.node_data = {};
-
-
+  //set up d3
   self.force = d3.layout.force()
     .size([self.width, self.height])
     .nodes([
@@ -39,11 +45,7 @@ function ForceChart(start_data) {
     self.node = self.svg.selectAll(".node"),
     self.link = self.svg.selectAll(".link");
 
-  self.cursor = self.svg.append("circle")
-    .attr("r", 30)
-    .attr("transform", "translate(-100,-100)")
-    .attr("class", "cursor");
-
+  //Fire it up.
   self.restart();
   self.warmUpSpider(start_data);
   self.processQueue();
