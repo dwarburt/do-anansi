@@ -2,6 +2,12 @@ function ForceChart(start_data) {
 
   var self = this;
 
+  self.max_depth = 3;
+  self.current_depth = 0;
+  self.node_queue = [];
+
+  self.status = 'play';
+
   self.width = 960;
   self.height = 500;
   self.larget_page = 0;
@@ -20,7 +26,7 @@ function ForceChart(start_data) {
     .charge(-160)
     .on("tick", tick);
 
-  self.svg = d3.select("body").append("svg")
+  self.svg = d3.select("#chart")
     .attr("width", self.width)
     .attr("height", self.height);
 
@@ -40,6 +46,7 @@ function ForceChart(start_data) {
 
   self.restart();
   self.warmUpSpider(start_data);
+  self.processQueue();
 
   function tick() {
     self.link.attr("x1", function (d) {
@@ -84,10 +91,10 @@ ForceChart.prototype.restart = function() {
       return self.getNodeSize(d);
     })
     .on('mouseover', function(d) {
-      $('#current-url').text(d.url);
+      showData(d);
     })
     .on('mouseout', function(d) {
-      $('#current-url').text('');
+      hideData();
     })
     .call(self.force.drag);
 
@@ -99,6 +106,18 @@ ForceChart.prototype.warmUpSpider = function(start_data) {
   this.spider(start_data);
 
 };
+ForceChart.prototype.processQueue = function() {
+  var self = this;
+  if (self.status == 'play') {
+    var queued_item = self.node_queue.shift();
+    if (queued_item) {
+      self.addNode(queued_item.data, queued_item.link_to);
+    }
+  }
+  setTimeout(function() {
+    self.processQueue();
+  }, 100);
+}
 /*
  * This is only called from addNode or warmUpSpider.  A node has just been added to the chart.
  * Process the links.
@@ -126,7 +145,8 @@ ForceChart.prototype.spider = function(page_data) {
     $.post('/fetch', {url: urldx}, function(data) {
       var postResponse = JSON.parse(data);
       console.log("Got response for " + urldx);
-      self.addNode(postResponse, page_data.url);
+      self.node_queue.push({data: postResponse, link_to: page_data.url});
+      //self.addNode(postResponse, page_data.url);
     });
 
   }
@@ -160,8 +180,13 @@ ForceChart.prototype.addNode = function(page_data, link_to) {
   self.restart();
 
   /* spider into our new node */
-  self.spider(page_data);
+  if (self.current_depth < self.max_depth) {
+    self.current_depth++;
+    self.spider(page_data);  
+  }
+  
 };
+
 ForceChart.prototype.getNodeSize = function(page_data) {
   var b = page_data.bytes;
   var smallest = 5;
@@ -170,3 +195,18 @@ ForceChart.prototype.getNodeSize = function(page_data) {
   return Math.max(smallest, Math.min(largest, s));
 
 };
+ForceChart.prototype.play = function() {
+  var self = this;
+  self.status = 'play';
+}
+ForceChart.prototype.pause = function() {
+  var self = this;
+  self.status = 'pause';
+}
+
+function showData(d) {
+  $('#current-url').text(d.url);
+}
+function hideData() {
+  $('#current-url').text('');
+}

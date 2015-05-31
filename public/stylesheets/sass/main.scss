@@ -109,3 +109,31 @@ rect {
   color: blue;
   text-decoration: underline;
 }
+$red: red;
+$green: green;
+#controls {
+  float: left;
+  padding: 25px;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: 25px;
+  cursor: pointer;
+  color: black;
+  display:none;
+}
+#controls.pause {
+  background-color: $red;
+  &:hover {
+    background-color: lighten($red, 25%);      
+  }
+
+}
+#controls.play {
+  background-color: $green;
+  &:hover {
+    background-color: lighten($green, 25%);      
+  }
+}
+#page-details {
+  display: none;
+}
