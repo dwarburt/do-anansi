@@ -28,7 +28,8 @@ class Anansi
 
 
     imgs = doc.css('img')
-      .map {|i| asset_path i.attributes['src'].value}
+      .select {|i| i.attributes['src']}
+      .map    {|i| asset_path i.attributes['src'].value}
 
     scripts = doc.css( 'script')
       .select{|s| s.attributes['src']}

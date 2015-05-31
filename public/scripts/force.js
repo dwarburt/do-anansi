@@ -4,9 +4,11 @@ function ForceChart(start_data) {
 
   self.width = 960;
   self.height = 500;
+  self.larget_page = 0;
+  self.smallest_page = 0;
 
   self.node_data = {};
-  self.node_data[start_data.url] = start_data;
+
 
   self.force = d3.layout.force()
     .size([self.width, self.height])
@@ -14,8 +16,8 @@ function ForceChart(start_data) {
       //{url: start_data.url}
       start_data
     ]) // initialize with a single node
-    .linkDistance(30)
-    .charge(-60)
+    .linkDistance(75)
+    .charge(-160)
     .on("tick", tick);
 
   self.svg = d3.select("body").append("svg")
@@ -37,44 +39,32 @@ function ForceChart(start_data) {
     .attr("class", "cursor");
 
   self.restart();
-
-  function mousedown() {
-    var point = d3.mouse(this),
-      node = {x: point[0], y: point[1]},
-      n = self.nodes.push(node);
-
-    // add links to any nearby nodes
-    self.nodes.forEach(function (target) {
-      var x = target.x - node.x,
-        y = target.y - node.y;
-      if (Math.sqrt(x * x + y * y) < 30) {
-        self.links.push({source: node, target: target});
-      }
-    });
-
-    self.restart();
-  }
+  self.warmUpSpider(start_data);
 
   function tick() {
     self.link.attr("x1", function (d) {
+      if (d.source.x == NaN) {
+        console.log("It's gone wack");
+        return 250;
+      }
       return d.source.x;
     })
-      .attr("y1", function (d) {
-        return d.source.y;
-      })
-      .attr("x2", function (d) {
-        return d.target.x;
-      })
-      .attr("y2", function (d) {
-        return d.target.y;
-      });
+    .attr("y1", function (d) {
+      return d.source.y;
+    })
+    .attr("x2", function (d) {
+      return d.target.x;
+    })
+    .attr("y2", function (d) {
+      return d.target.y;
+    });
 
     self.node.attr("cx", function (d) {
       return d.x;
     })
-      .attr("cy", function (d) {
-        return d.y;
-      });
+    .attr("cy", function (d) {
+      return d.y;
+    });
   }
 }
 
@@ -91,7 +81,7 @@ ForceChart.prototype.restart = function() {
     .attr("class", "node")
     .attr("r", function(d) {
       //1 pixel for every KB
-      return d.bytes / 1024;
+      return self.getNodeSize(d);
     })
     .on('mouseover', function(d) {
       $('#current-url').text(d.url);
@@ -103,18 +93,80 @@ ForceChart.prototype.restart = function() {
 
   self.force.start();
 };
+
+ForceChart.prototype.warmUpSpider = function(start_data) {
+  this.node_data[start_data.url] = start_data;
+  this.spider(start_data);
+
+};
+/*
+ * This is only called from addNode or warmUpSpider.  A node has just been added to the chart.
+ * Process the links.
+ */
+ForceChart.prototype.spider = function(page_data) {
+  var self = this;
+
+  /*
+   * For each of the links, either create a link to an existing node or create a new node (with link).
+   */
+  for (var i = 0; i < page_data.links.length; i++) {
+    var urldx = page_data.links[i];
+
+    console.log("Making link for " + urldx);
+
+    if (self.hasKnownUrl(urldx)) {
+      //The url page_data links to is already in the graph, so just add a link and move on.
+      //self.links.push({source: page_data, target: self.node_data[urldx]});
+      continue;
+    }
+
+    self.node_data[urldx] = 'fetching';
+    console.log("Adding node for " + urldx);
+
+    $.post('/fetch', {url: urldx}, function(data) {
+      var postResponse = JSON.parse(data);
+      console.log("Got response for " + urldx);
+      self.addNode(postResponse, page_data.url);
+    });
+
+  }
+
+};
+
+ForceChart.prototype.hasKnownUrl = function(url) {
+  return this.node_data.hasOwnProperty(url);
+};
+
 ForceChart.prototype.addNode = function(page_data, link_to) {
   var self = this;
-  if (self.node_data.hasOwnProperty(page_data.url)) {
+
+  /* recursion terminating condition */
+  if (self.hasKnownUrl(page_data.url) && self.node_data[page_data.url] != 'fetching') {
     return;
   }
-  if (!self.node_data.hasOwnProperty(link_to)) {
+  self.node_data[page_data.url] = page_data;
+
+  /* sanity check */
+  if (!self.hasKnownUrl(link_to)) {
     return;
   }
+
+  /* create node on the visualization */
   var link_target_node = self.node_data[link_to];
   page_data.x = link_target_node.x;
   page_data.y = link_target_node.y;
   self.nodes.push(page_data);
   self.links.push({source: page_data, target: link_target_node});
+  self.restart();
 
-}
+  /* spider into our new node */
+  self.spider(page_data);
+};
+ForceChart.prototype.getNodeSize = function(page_data) {
+  var b = page_data.bytes;
+  var smallest = 5;
+  var largest = 25;
+  var s = b / (5*1024);
+  return Math.max(smallest, Math.min(largest, s));
+
+};
