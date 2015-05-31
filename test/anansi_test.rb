@@ -29,6 +29,12 @@ class AnansiTest < Minitest::Test
     a.inject_getter MockHtmlGetter.new
     assert a.page_data
   end
+  def test_has_stylesheets
+    a = Anansi.new('http://www.reddit.com/r/TuxedoCats/')
+    a.inject_getter MockHtmlGetter.new
+    assert a.page_data.stylesheets.count > 0
+
+  end
 
   def test_one_link_is_local
     a = Anansi.new(EX)

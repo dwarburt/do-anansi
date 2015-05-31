@@ -206,7 +206,13 @@ ForceChart.prototype.pause = function() {
 
 function showData(d) {
   $('#current-url').text(d.url);
+  $('#css-count').text(d.stylesheets.length);
+  $('#img-count').text(d.imgs.length);
+  $('#script-count').text(d.scripts.count);
+  $('#page-size').text(d.bytes);
+  $('#page-details').css('display', 'inline-block');
 }
 function hideData() {
   $('#current-url').text('');
+  $('#page-details').hide();
 }

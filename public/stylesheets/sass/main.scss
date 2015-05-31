@@ -136,4 +136,9 @@ $green: green;
 }
 #page-details {
   display: none;
+  margin: 10px;
+  border-radius: 5px;
+  td {
+    padding: 5px;
+  }
 }
