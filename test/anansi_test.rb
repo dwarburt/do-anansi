@@ -36,6 +36,12 @@ class AnansiTest < Minitest::Test
 
   end
 
+  def test_has_scripts
+    a = Anansi.new('http://www.reddit.com/r/TuxedoCats/')
+    a.inject_getter MockHtmlGetter.new
+    assert a.page_data[:scripts].count > 0
+  end
+
   def test_one_link_is_local
     a = Anansi.new(EX)
     a.inject_getter MockHtmlGetter.new(:one_local_link)
