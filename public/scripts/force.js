@@ -208,7 +208,7 @@ function showData(d) {
   $('#current-url').text(d.url);
   $('#css-count').text(d.stylesheets.length);
   $('#img-count').text(d.imgs.length);
-  $('#script-count').text(d.scripts.count);
+  $('#script-count').text(d.scripts.length);
   $('#page-size').text(d.bytes);
   $('#page-details').css('display', 'inline-block');
 }
