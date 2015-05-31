@@ -10,6 +10,7 @@ after_success:
 - chmod 600 deploy.pem
 - ssh-add deploy.pem
 - mkdir -p ~/.ssh
+- cp deploy.pem ~/.ssh/id_rsa
 - echo 'ruby-web-crawling-and-showing-links-thing.info,104.236.59.174 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCxNbPj3ZnUzX0BIiBU8nyQdvvtEKEuixNmwNoalJ4cyG0T9OKfoVvpUUigiPiPKsyeucReL5XHgsV7QQpiV3yq/Mg6rSCSTuaxXvHibi4ppZzFqsWLfZ3tDeoGJ2FaO5lnc3sN9AR5GZPkAHDWx9x1mE5VZ43yQvzXxqRnPOv2XwI9OiUAvhE+zwLA0iIgRk1hJWtfiEJLwoMMLPdf9vqjY9jaXbgEpVqj5VeVuwUDxZ9ffMFmjvablHElK1OPgYzq2oUg2pY2xE4nv842XQTrni/HQciPzpm8KXmKEEaSSscc+y0K5hMOnL/NUmShN7Mbs79J2caA7H9JgPGW/XBh' >> ~/.ssh/known_hosts
 - git remote add deploy ssh://anansi@ruby-web-crawling-and-showing-links-thing.info:/home/anansi/do-anansi.git
 - git push deploy
