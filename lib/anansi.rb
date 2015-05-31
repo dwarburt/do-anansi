@@ -23,7 +23,7 @@ class Anansi
       .map    {|a| asset_path a }
 
     stylesheets = doc.css('link')
-      .select {|a| a.attributes['href'] && a.attributes['rel'] && a.attributes['rel'] == 'stylesheet'}
+      .select {|a| a.attributes['href'] && a.attributes['rel'] && a.attributes['rel'].value == 'stylesheet'}
       .map    {|a| asset_path a.attributes['href'].value}
 
 

@@ -32,7 +32,7 @@ class AnansiTest < Minitest::Test
   def test_has_stylesheets
     a = Anansi.new('http://www.reddit.com/r/TuxedoCats/')
     a.inject_getter MockHtmlGetter.new
-    assert a.page_data.stylesheets.count > 0
+    assert a.page_data[:stylesheets].count > 0
 
   end
 
