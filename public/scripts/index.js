@@ -90,7 +90,7 @@ function pause() {
 }
 
 //TEST
-$(function() {
-  $('.big-box').val('http://www.google.com');
-  letsGo();
-})
+//$(function() {
+//  $('.big-box').val('http://www.google.com');
+//  letsGo();
+//})
